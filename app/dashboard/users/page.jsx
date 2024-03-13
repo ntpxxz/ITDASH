@@ -6,9 +6,11 @@ import Image from "next/image";
 import Pagination from "@/app/ui/dashboard/panigation/pagination";
 import { fetchUsers } from "@/app/lib/data";
 
-const UsersPage = async () => {
-  const users = await fetchUsers();
-  console.log(users);
+const UsersPage = async ({searchParams}) => {
+  const q = searchParams?.q || "";
+  const page = searchParams?.page || 1;
+  const {count, users }= await fetchUsers(q);
+  
   return (
     <div className={styles.container}>
       <div className={styles.top}>
@@ -29,7 +31,7 @@ const UsersPage = async () => {
           </tr>
         </thead>
         <tbody>
-          {users.map((user) => (
+        {users && users.map((user) => (
             <tr key={user.id}>
               <td>
                 <div className={styles.user}>
@@ -67,7 +69,7 @@ const UsersPage = async () => {
           ))}
         </tbody>
       </table>
-      <Pagination count="" />
+      <Pagination count={count} />
     </div>
   );
 };
