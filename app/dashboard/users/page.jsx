@@ -5,11 +5,12 @@ import Link from "next/link";
 import Image from "next/image";
 import Pagination from "@/app/ui/dashboard/panigation/pagination";
 import { fetchUsers } from "@/app/lib/data";
+import { deleteUser } from "@/app/lib/actions";
 
 const UsersPage = async ({searchParams}) => {
   const q = searchParams?.q || "";
   const page = searchParams?.page || 1;
-  const {count, users }= await fetchUsers(q);
+  const {count, users }= await fetchUsers(q,page);
   
   return (
     <div className={styles.container}>
@@ -31,7 +32,7 @@ const UsersPage = async ({searchParams}) => {
           </tr>
         </thead>
         <tbody>
-        {users && users.map((user) => (
+        {users.map((user) => (
             <tr key={user.id}>
               <td>
                 <div className={styles.user}>
@@ -57,7 +58,7 @@ const UsersPage = async ({searchParams}) => {
                       View
                     </button>
                   </Link>
-                  <form action="">
+                  <form action={deleteUser}>
                     <input type="hidden" name="id" value={user.id} />
                     <button className={`${styles.button} ${styles.delete}`}>
                       Delete
